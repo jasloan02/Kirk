@@ -54,7 +54,7 @@ typedef union YYSTYPE
 
 /* Line 1676 of yacc.c  */
 #line 21 "calc.y"
-float num; char id[20];
+int num; char id[20];
 
 
 /* Line 1676 of yacc.c  */

@@ -8,7 +8,7 @@
 
 %%
 "print"         {return print;}
-"exit"          {return exit_cmd;}
+"exit"          {return exit;}
 [a-zA-Z]+       {strcpy(yylval.id, yytext); return identifier;}
 [0-9]+          {yylval.num = atoi(yytext); return number;}
 [ \t\n]         ;

@@ -10,18 +10,18 @@
 
     struct Variable {
         char name[20];
-        float value;
+        int value;
     };
     struct Variable vars[10];
-    float getVarVal(char varName[20]);
-    void updateVarVal(char varName[20], float newVal);
+    int getVarVal(char varName[20]);
+    void updateVarVal(char varName[20], int newVal);
 %}
 
 // Bison Definitions
-%union {float num; char id[20];}
+%union {int num; char id[20];}
 %start line
 %token print
-%token exit_cmd
+%token exit
 %token <num> number
 %token <id> identifier
 %type <num> line exp term
@@ -30,11 +30,11 @@
 %%
 
 line        : assignment ';'        {;}
-            | exit_cmd ';'          {exit(EXIT_SUCCESS);}
+            | exit ';'          {exit(EXIT_SUCCESS);}
             | print exp ';'         {printf("Output: %d\n", $2);}
             | line assignment ';'   {;}
             | line print exp ';'    {printf("Output: %d\n", $3);}
-            | line exit_cmd ';'     {exit(EXIT_SUCCESS);}
+            | line exit ';'     {exit(EXIT_SUCCESS);}
             ;
 
 assignment  : identifier '=' exp    {updateVarVal($1, $3);};
@@ -54,7 +54,7 @@ term        : number                {$$ = $1;}
 
 // C functions
 
-float getVarVal(char varName[20]) {
+int getVarVal(char varName[20]) {
     for (int i = 0; i < 10; i++) {
         if (!strcmp(vars[i].name, varName)) {
             return vars[i].value;
@@ -64,9 +64,10 @@ float getVarVal(char varName[20]) {
     return 0;
 }
 
-void updateVarVal(char varName[20], float newVal) {
+void updateVarVal(char varName[20], int newVal) {
     for (int i = 0; i < 10; i++) {
-        if (!strcmp("", vars[i].name)) {
+        if (!strcmp("\0", vars[i].name)) {
+            printf("DEBUG: Set %s to %d\n", varName, newVal);
             strcpy(vars[i].name, varName);
             vars[i].value = newVal;
             return;
